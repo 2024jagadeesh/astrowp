@@ -1,8 +1,8 @@
 ---
 export const prerender = false;
-import Layout from "../../layouts/Layout.astro";
-import "../../styles/blog.css";
-import type { WordPressPost } from "../../types/wordpress";
+import Layout from "../../../layouts/Layout.astro";
+import "../../../styles/blog.css";
+import type { WordPressPost } from "../../../types/wordpress";
 
 /* CURRENT PAGE */
 
@@ -215,7 +215,7 @@ const middlePages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
       <!-- PAGINATION -->
 
       <div class="blog-pagination">
-        {currentPage > 1 && <a href={`/blog/${currentPage - 1}`}>←</a>}
+        {currentPage > 1 && <a href={`/blog/page/${currentPage - 1}`}>←</a>}
 
         <a href="/blog/1" class={currentPage === 1 ? "active" : ""}> 1 </a>
 
@@ -224,7 +224,7 @@ const middlePages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
         {
           middlePages.map((page) => (
             <a
-              href={`/blog/${page}`}
+              href={`/blog/page/${page}`}
               class={currentPage === page ? "active" : ""}
             >
               {page}
@@ -245,7 +245,11 @@ const middlePages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
           )
         }
 
-        {currentPage < totalPages && <a href={`/blog/${currentPage + 1}`}>→</a>}
+        {
+          currentPage < totalPages && (
+            <a href={`/blog/page/${currentPage + 1}`}>→</a>
+          )
+        }
       </div>
     </div>
   </section>
