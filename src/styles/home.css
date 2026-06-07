@@ -268,31 +268,14 @@
   font-weight: 600;
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 768px) {
   .post-grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: grid !important;
+    grid-template-columns: 1fr !important;
   }
 
-  .post-card h3 {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .post-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .post-card img {
-    height: 220px;
-  }
-
-  .post-card-content {
-    padding: 1.5rem;
-  }
-
-  .post-card h3 {
-    font-size: 1.25rem;
+  .post-card {
+    width: 100% !important;
   }
 }
 
