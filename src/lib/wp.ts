@@ -1,1 +1,1 @@
-export const WP_API = "https://campurl.com/astro-wp/wp-json/wp/v2";
+export const WP_API = import.meta.env.PUBLIC_WP_API;
