@@ -1,0 +1,48 @@
+---
+import type { WordPressPost } from "../types/wordpress";
+const AI_CATEGORY_ID = 13;
+interface Props {
+  posts: WordPressPost[];
+}
+const { posts } = Astro.props;
+---
+
+<section class="ai-section section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">AI Hub</span>
+
+      <h2 class="section-title">Explore Artificial Intelligence</h2>
+
+      <p class="section-body">
+        Tutorials, tools, prompts and practical AI workflows for developers.
+      </p>
+    </div>
+
+    <div class="ai-grid">
+      {
+        posts.map((post) => (
+          <article class="ai-card">
+            <img
+              src={
+                post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+                "/images/blog-placeholder.png"
+              }
+              alt={post.title.rendered}
+            />
+
+            <div class="ai-card-content">
+              <span class="post-category">AI</span>
+
+              <h3 set:html={post.title.rendered} />
+
+              <a href={`/blog/${post.slug}`} class="read-more">
+                Read Article →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

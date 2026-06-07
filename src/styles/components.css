@@ -1,0 +1,44 @@
+/* ==========================
+   TYPOGRAPHY
+========================== */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "DM Serif Display", serif;
+}
+
+.section-tag {
+  display: inline-block;
+
+  font-size: 0.75rem;
+
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  color: var(--accent);
+
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+
+  line-height: 1.1;
+
+  letter-spacing: -1px;
+
+  margin-bottom: 1rem;
+}
+
+.section-body {
+  color: var(--muted);
+
+  line-height: 1.8;
+
+  font-weight: 300;
+}

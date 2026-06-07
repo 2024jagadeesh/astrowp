@@ -1,0 +1,267 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/blog.css";
+import type { WordPressPost } from "../../types/wordpress";
+
+export async function getStaticPaths() {
+  const response = await fetch("http://localhost/astro-wp/wp-json/wp/v2/posts");
+
+  const totalPosts = Number(response.headers.get("X-WP-Total"));
+
+  const POSTS_PER_PAGE = 4;
+
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: {
+      page: String(i + 1),
+    },
+  }));
+}
+
+/* CURRENT PAGE */
+
+const currentPage = Number(Astro.params.page) || 1;
+
+const POSTS_PER_PAGE = 6;
+
+/* FETCH POSTS */
+
+const response = await fetch(
+  `http://localhost/astro-wp/wp-json/wp/v2/posts?_embed&per_page=${POSTS_PER_PAGE}&page=${currentPage}`,
+);
+
+const posts: WordPressPost[] = await response.json();
+
+/* TOTAL */
+
+const totalPosts = Number(response.headers.get("X-WP-Total"));
+
+const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+/* FEATURED */
+
+const featuredPost =
+  currentPage === 1 && posts.length > 0 ? posts[0] : undefined;
+
+/* NORMAL POSTS */
+
+const normalPosts = currentPage === 1 ? posts.slice(1) : posts;
+
+const middlePages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
+  (page) => {
+    return (
+      page !== 1 &&
+      page !== totalPages &&
+      page >= currentPage - 1 &&
+      page <= currentPage + 1
+    );
+  },
+);
+---
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById(
+      "searchInput",
+    ) as HTMLInputElement | null;
+    const postsContainer = document.getElementById(
+      "postsContainer",
+    ) as HTMLElement | null;
+
+    if (!searchInput || !postsContainer) return;
+
+    let timeout: number | undefined;
+
+    searchInput.addEventListener("input", () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = window.setTimeout(async () => {
+        const keyword = searchInput.value.trim();
+
+        if (!keyword) {
+          location.reload();
+          return;
+        }
+
+        const response = await fetch(
+          `http://localhost/astro-wp/wp-json/wp/v2/posts?_embed&search=${encodeURIComponent(keyword)}`,
+        );
+
+        type Post = {
+          id: number;
+          slug: string;
+          title: { rendered: string };
+          excerpt: { rendered: string };
+          _embedded?: {
+            "wp:featuredmedia"?: Array<{ source_url: string }>;
+          };
+        };
+
+        const posts: Post[] = await response.json();
+
+        postsContainer.innerHTML = "";
+
+        if (!posts.length) {
+          postsContainer.innerHTML = `
+          <div class="col-span-3 text-center text-gray-500">
+            No articles found
+          </div>
+        `;
+          return;
+        }
+
+        posts.forEach((post) => {
+          const image =
+            post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+            `https://picsum.photos/800/500?random=${post.id}`;
+
+          postsContainer.innerHTML += `
+          <article class="blog-card">
+
+            <a href="/blog/${post.slug}">
+
+              <img
+                src="${image}"
+              >
+
+            </a>
+
+            <div class="blog-card-content">
+
+              <h2>
+                ${post.title.rendered}
+              </h2>
+
+              <div class="excerpt">
+                ${post.excerpt.rendered}
+              </div>
+
+              <a
+                href="/blog/${post.slug}"
+                class="read-more"
+              >
+                Read More →
+              </a>
+
+            </div>
+
+          </article>
+        `;
+        });
+      }, 300);
+    });
+  });
+</script>
+
+<Layout title="TechPeople Blog">
+  <section class="blog-page">
+    <div class="container">
+      <!-- HERO -->
+
+      <div class="blog-hero">
+        <div>
+          <h1 class="blog-page-title">
+            Articles, Stories & Tutorials for Tech People
+          </h1>
+
+          <div class="blog-search">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search articles..."
+            />
+          </div>
+        </div>
+
+        {
+          featuredPost && (
+            <div class="featured-post">
+              <img
+                src={
+                  featuredPost._embedded?.["wp:featuredmedia"]?.[0]
+                    ?.source_url || "/images/blog-placeholder.png"
+                }
+                alt={featuredPost.title.rendered}
+              />
+
+              <div class="featured-overlay">
+                <div>
+                  <h2 set:html={featuredPost.title.rendered} />
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+
+      <!-- POSTS -->
+
+      <div id="postsContainer" class="blog-grid">
+        {
+          normalPosts.map((post: WordPressPost) => (
+            <article class="blog-card">
+              <a href={`/blog/${post.slug}`}>
+                <img
+                  src={
+                    post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+                    "/images/blog-placeholder.png"
+                  }
+                  alt={post.title.rendered}
+                />
+              </a>
+
+              <div class="blog-card-content">
+                <h2 set:html={post.title.rendered} />
+
+                <div class="excerpt" set:html={post.excerpt.rendered} />
+
+                <a href={`/blog/${post.slug}`} class="read-more">
+                  Read More →
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <!-- PAGINATION -->
+
+      <div class="blog-pagination">
+        {currentPage > 1 && <a href={`/blog/${currentPage - 1}`}>←</a>}
+
+        <a href="/blog/1" class={currentPage === 1 ? "active" : ""}> 1 </a>
+
+        {currentPage > 3 && <span>...</span>}
+
+        {
+          middlePages.map((page) => (
+            <a
+              href={`/blog/${page}`}
+              class={currentPage === page ? "active" : ""}
+            >
+              {page}
+            </a>
+          ))
+        }
+
+        {currentPage < totalPages - 2 && <span>...</span>}
+
+        {
+          totalPages > 1 && (
+            <a
+              href={`/blog/${totalPages}`}
+              class={currentPage === totalPages ? "active" : ""}
+            >
+              {totalPages}
+            </a>
+          )
+        }
+
+        {currentPage < totalPages && <a href={`/blog/${currentPage + 1}`}>→</a>}
+      </div>
+    </div>
+  </section>
+</Layout>

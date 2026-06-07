@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/wordpress.css";
+import "../styles/page.css";
+
+import { WP_API } from "../lib/wp";
+
+interface WPPage {
+  slug: string;
+  title: {
+    rendered: string;
+  };
+  content: {
+    rendered: string;
+  };
+}
+
+export async function getStaticPaths() {
+  const response = await fetch(`${WP_API}/pages?per_page=100`);
+
+  const pages: WPPage[] = await response.json();
+
+  return pages.map((page) => ({
+    params: {
+      slug: page.slug,
+    },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const response = await fetch(`${WP_API}/pages?slug=${slug}`);
+
+const data = await response.json();
+
+const page: WPPage = data[0];
+
+if (!page) {
+  throw new Error(`Page not found: ${slug}`);
+}
+---
+
+<Layout title={page.title.rendered}>
+  <section class={`page-wrapper page-${slug}`}>
+    <div class="wordpress-content" set:html={page.content.rendered} />
+  </section>
+</Layout>

@@ -1,0 +1,98 @@
+/*About*/
+.page-wrapper {
+  padding: 3rem 0 5rem;
+}
+
+/* About Section */
+
+.about-section {
+  margin-top: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.about-section .wp-block-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .about-section .wp-block-columns {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .about-section .wp-block-column {
+    flex: 1;
+  }
+}
+
+.about-section h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.about-section p {
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: #4b5563;
+}
+
+.about-section .wp-block-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Team Section */
+
+.team-grid {
+  margin-top: 4rem;
+}
+
+.team-grid > h2 {
+  margin-bottom: 2rem;
+}
+
+.team-grid .wp-block-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .team-grid .wp-block-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .team-grid .wp-block-columns {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.team-grid .wp-block-column {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+}
+
+.team-grid .wp-block-image {
+  margin-bottom: 0;
+}
+
+.team-grid h3 {
+  padding: 1.5rem 1.5rem 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.team-grid p {
+  padding: 0 1.5rem 1.5rem;
+  margin-bottom: 0;
+  color: #6b7280;
+}

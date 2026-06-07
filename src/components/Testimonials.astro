@@ -1,0 +1,45 @@
+---
+import type { Testimonial } from "../types/wordpress";
+interface Props {
+  testimonials: Testimonial[];
+}
+
+const { testimonials } = Astro.props as Props;
+---
+
+<section class="testimonials section">
+  <div class="container">
+    <div class="testimonials-header">
+      <span class="section-tag"> Social Proof </span>
+
+      <h2 class="section-title">What teams are saying</h2>
+
+      <p class="section-body">
+        Thousands of developers and teams use TechPeople to stay ahead of the
+        latest technology trends.
+      </p>
+    </div>
+
+    <div class="testimonial-grid">
+      {
+        testimonials.map((item: Testimonial) => (
+          <article class="testimonial-card">
+            <div class="stars">{"★".repeat(item.acf.rating)}</div>
+
+            <blockquote>"{item.acf.quote}"</blockquote>
+
+            <div class="author">
+              <div class="avatar">{item.acf.company?.charAt(0)}</div>
+
+              <div class="author-info">
+                <h3>{item.acf.name || item.title.rendered}</h3>
+
+                <p>{item.acf.role}</p>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

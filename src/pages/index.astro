@@ -1,17 +1,69 @@
 ---
+console.time("Homepage");
+import * as cheerio from "cheerio";
 
+import Hero from "../components/Hero.astro";
+import LatestPosts from "../components/LatestPosts.astro";
+import AISection from "../components/AISection.astro";
+import Pagefeatures from "../components/Pagefeatures.astro";
+import Stats from "../components/Stats.astro";
+import Testimonials from "../components/Testimonials.astro";
+import ContactSection from "../components/ContactSection.astro";
+import Contact from "../components/Contact.astro";
+import Layout from "../layouts/Layout.astro";
+
+import { WP_API } from "../lib/wp";
+
+const [homeResponse, postsResponse, aiPostsResponse, testimonialsResponse] =
+  await Promise.all([
+    fetch(`${WP_API}/pages?slug=home`),
+    fetch(`${WP_API}/posts?_embed&per_page=3`),
+    fetch(`${WP_API}/posts?_embed&categories=13&per_page=3`),
+    fetch(`${WP_API}/testimonial`),
+  ]);
+
+const homeData = await homeResponse.json();
+
+const home = homeData[0];
+
+const imageId = home.acf.hero_image;
+
+const mediaResponse = await fetch(`${WP_API}/media/${imageId}`);
+
+const media = await mediaResponse.json();
+
+const heroImage = media.source_url;
+
+const posts = await postsResponse.json();
+const aiPosts = await aiPostsResponse.json();
+const testimonials = await testimonialsResponse.json();
+
+const page = homeData[0];
+
+const $ = cheerio.load(page.content.rendered);
+
+const featuresContent = $("#features-section").prop("outerHTML") || "";
+
+const statsContent = $("#stats-section").prop("outerHTML") || "";
+
+const ctaContent = $("#cta-section").prop("outerHTML") || "";
+console.timeEnd("Homepage");
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="TechPeople Blog">
+  <Hero page={page} heroImage={heroImage} />
+
+  <LatestPosts posts={posts} />
+
+  <AISection posts={aiPosts} />
+
+  <Pagefeatures content={featuresContent} />
+
+  <Stats content={statsContent} />
+
+  <Testimonials testimonials={testimonials} />
+
+  <ContactSection content={ctaContent} />
+
+  <Contact />
+</Layout>

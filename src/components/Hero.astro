@@ -1,0 +1,42 @@
+---
+const { page, heroImage } = Astro.props;
+
+const acf = page.acf;
+---
+
+<section class="hero section">
+  <div class="container">
+    <div class="hero-text">
+      <div class="hero-badge">
+        {acf.hero_badge}
+      </div>
+
+      <h1 set:html={acf.hero_highlight} />
+
+      <p>
+        {acf.hero_description}
+      </p>
+
+      <div class="hero-actions">
+        <a href={acf.primary_button_url} class="btn-primary">
+          {acf.primary_button_text}
+        </a>
+
+        <a href={acf.secondary_button_url} class="btn-ghost">
+          {acf.secondary_button_text}
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-img-wrap">
+        <img src={heroImage} alt={page.title.rendered} />
+
+        <div class="hero-stat-card">
+          <div class="num">{acf.hero_stat_number}</div>
+          <div class="label">{acf.hero_stat_label}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

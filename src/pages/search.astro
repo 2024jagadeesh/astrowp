@@ -1,0 +1,90 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const query = Astro.url.searchParams.get("query");
+
+let posts = [];
+
+if (query) {
+  const response = await fetch(
+    `http://localhost/astro-wp/wp-json/wp/v2/posts?search=${query}&_embed`,
+  );
+
+  posts = await response.json();
+}
+---
+
+<Layout title="Search">
+  <section class="container mx-auto max-w-7xl px-8 py-16">
+    <h1 class="text-5xl font-bold mb-10">Search Results</h1>
+
+    <!-- Search Form -->
+
+    <form action="/search" method="GET" class="flex items-center mb-16">
+      <input
+        type="text"
+        name="query"
+        value={query || ""}
+        placeholder="Search articles..."
+        class="w-full border rounded-lg p-3"
+      />
+
+      <button
+        type="submit"
+        class="bg-indigo-700 text-white px-6 py-3 rounded-lg ml-2"
+      >
+        Search
+      </button>
+    </form>
+
+    <!-- Results -->
+
+    {
+      query && (
+        <p class="mb-10 text-gray-600">
+          Found {posts.length} result(s) for:
+          <strong> {query} </strong>
+        </p>
+      )
+    }
+
+    <!-- Posts Grid -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        posts.map((post) => (
+          <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <a href={`/post/${post.slug}`}>
+              <img
+                src={
+                  post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+                  `https://picsum.photos/800/500?random=${post.id}`
+                }
+                class="w-full h-56 object-cover"
+              />
+            </a>
+
+            <div class="p-6">
+              <h2
+                class="text-2xl font-bold mb-4"
+                set:html={post.title.rendered}
+              />
+
+              <div
+                class="text-gray-600 line-clamp-3"
+                set:html={post.excerpt.rendered}
+              />
+
+              <a
+                href={`/post/${post.slug}`}
+                class="inline-block mt-4 text-indigo-600 font-semibold"
+              >
+                Read More →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

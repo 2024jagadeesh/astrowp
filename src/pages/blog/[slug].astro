@@ -1,0 +1,32 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/wordpress.css";
+
+const { slug } = Astro.params;
+
+const response = await fetch(
+  `http://localhost/astro-wp/wp-json/wp/v2/posts?slug=${slug}&_embed`,
+);
+
+const data = await response.json();
+
+const post = data[0];
+---
+
+<Layout title={post.title.rendered}>
+  <section class="blog-page">
+    <div class="container">
+      <h1 class="text-5xl font-bold mb-10" set:html={post.title.rendered} />
+
+      <img
+        src={post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+          `https://picsum.photos/1200/700?random=${post.id}`}
+        class="rounded-xl mb-10 w-full"
+      />
+
+      <article class="wordpress-content" set:html={post.content.rendered} />
+    </div>
+  </section>
+</Layout>

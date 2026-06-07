@@ -1,0 +1,9 @@
+---
+const { content } = Astro.props;
+---
+
+<section class="stats-section section">
+  <div class="container">
+    <div class="wordpress-content" set:html={content} />
+  </div>
+</section>

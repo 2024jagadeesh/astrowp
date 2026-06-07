@@ -1,0 +1,11 @@
+---
+console.time("WP Homepage");
+
+const response = await fetch("http://localhost/astro-wp/");
+
+await response.text();
+
+console.timeEnd("WP Homepage");
+---
+
+<h1>Done</h1>

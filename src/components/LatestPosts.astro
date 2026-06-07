@@ -1,0 +1,52 @@
+---
+import type { WordPressPost } from "../types/wordpress";
+
+interface Props {
+  posts: WordPressPost[];
+}
+
+const { posts } = Astro.props as Props;
+---
+
+<section class="latest-posts section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag"> Latest Articles </span>
+
+      <h2 class="section-title">Fresh content for developers</h2>
+
+      <p class="section-body">
+        Learn WordPress, Astro, TypeScript and AI with practical tutorials and
+        real-world projects.
+      </p>
+    </div>
+
+    <div class="post-grid">
+      {
+        posts.map((post) => (
+          <article class="post-card">
+            <img
+              src={
+                post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+                "/images/blog-placeholder.png"
+              }
+              alt={post.title.rendered}
+            />
+
+            <div class="post-card-content">
+              <span class="post-category">Article</span>
+
+              <h3 set:html={post.title.rendered} />
+
+              <div class="post-excerpt" set:html={post.excerpt.rendered} />
+
+              <a href={`/blog/${post.slug}`} class="read-more">
+                Read Article →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

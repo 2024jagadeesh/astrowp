@@ -1,0 +1,30 @@
+.wordpress-content {
+  max-width: 1280px;
+  margin: auto;
+  padding: 2.5rem 2rem;
+}
+
+.wordpress-content img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.wordpress-content h2 {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.wordpress-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.wordpress-content p {
+  color: #4b5563;
+  line-height: 1.7;
+}

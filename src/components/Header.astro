@@ -1,0 +1,23 @@
+---
+import { Image } from "astro:assets";
+import logo from "../images/logo.png";
+---
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="nav-logo">
+      <Image src={logo} alt="TechPeople" width={50} height={50} />
+
+      <span>TechPeople</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/blog">Blog</a>
+      <a href="/about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <a href="/blog" class="nav-cta"> Start Reading </a>
+  </div>
+</header>
