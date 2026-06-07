@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import "../styles/wordpress.css";
 import "../styles/page.css";
@@ -13,18 +14,6 @@ interface WPPage {
   content: {
     rendered: string;
   };
-}
-
-export async function getStaticPaths() {
-  const response = await fetch(`${WP_API}/pages?per_page=100`);
-
-  const pages: WPPage[] = await response.json();
-
-  return pages.map((page) => ({
-    params: {
-      slug: page.slug,
-    },
-  }));
 }
 
 const { slug } = Astro.params;
