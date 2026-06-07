@@ -1,0 +1,107 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Contact">
+  <section class="contact-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Contact</span>
+
+        <h1 class="section-title">Get In Touch</h1>
+
+        <p class="section-body">
+          Have a project in mind? Send us a message and we'll get back to you.
+        </p>
+      </div>
+
+      <form id="contactForm" class="contact-form">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="name" />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" />
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="message" rows="5"></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn"> Send Message </button>
+
+        <p id="formMessage"></p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("contactForm");
+      const formMessage = document.getElementById("formMessage");
+      const submitBtn = document.getElementById("submitBtn");
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("name")?.value.trim();
+        const email = document.getElementById("email")?.value.trim();
+        const message = document.getElementById("message")?.value.trim();
+
+        formMessage.textContent = "";
+
+        if (!name) {
+          formMessage.textContent = "Please enter your name";
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+          formMessage.textContent = "Please enter a valid email address";
+          return;
+        }
+
+        if (!message) {
+          formMessage.textContent = "Please enter your message";
+          return;
+        }
+
+        try {
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Sending...";
+
+          const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name,
+              email,
+              message,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            formMessage.textContent = "Message sent successfully!";
+            form.reset();
+          } else {
+            formMessage.textContent =
+              result.message || "Failed to send message";
+          }
+        } catch (error) {
+          formMessage.textContent = "Something went wrong. Please try again.";
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send Message";
+        }
+      });
+    });
+  </script>
+</Layout>
