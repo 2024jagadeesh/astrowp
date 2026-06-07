@@ -217,7 +217,7 @@ const middlePages = Array.from({ length: totalPages }, (_, i) => i + 1).filter(
       <div class="blog-pagination">
         {currentPage > 1 && <a href={`/blog/page/${currentPage - 1}`}>←</a>}
 
-        <a href="/blog/1" class={currentPage === 1 ? "active" : ""}> 1 </a>
+        <a href="/blog/page/1" class={currentPage === 1 ? "active" : ""}> 1 </a>
 
         {currentPage > 3 && <span>...</span>}
 
