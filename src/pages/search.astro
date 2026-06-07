@@ -7,7 +7,7 @@ let posts = [];
 
 if (query) {
   const response = await fetch(
-    `http://localhost/astro-wp/wp-json/wp/v2/posts?search=${query}&_embed`,
+    `https://campurl.com/astro-wp/wp-json/wp/v2/posts?search=${query}&_embed`,
   );
 
   posts = await response.json();

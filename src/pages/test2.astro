@@ -1,20 +1,22 @@
 ---
 console.time("Home");
-await fetch("http://localhost/astro-wp/wp-json/wp/v2/pages?slug=home");
+await fetch("https://campurl.com/astro-wp/wp-json/wp/v2/pages?slug=home");
 console.timeEnd("Home");
 
 console.time("Posts");
-await fetch("http://localhost/astro-wp/wp-json/wp/v2/posts?_embed&per_page=3");
+await fetch(
+  "https://campurl.com/astro-wp/wp-json/wp/v2/posts?_embed&per_page=3",
+);
 console.timeEnd("Posts");
 
 console.time("AI");
 await fetch(
-  "http://localhost/astro-wp/wp-json/wp/v2/posts?_embed&categories=13&per_page=3",
+  "https://campurl.com/astro-wp/wp-json/wp/v2/posts?_embed&categories=13&per_page=3",
 );
 console.timeEnd("AI");
 
 console.time("Testimonials");
-await fetch("http://localhost/astro-wp/wp-json/wp/v2/testimonial");
+await fetch("https://campurl.com/astro-wp/wp-json/wp/v2/testimonial");
 console.timeEnd("Testimonials");
 ---
 
